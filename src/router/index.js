@@ -32,6 +32,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
+  const user = window.sessionStorage.getItem("user");
+  if(to.path=="/login")return next();
+  console.log(user);
+  if(user==null) return("/login")
   next()
 })
 

@@ -39,8 +39,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: '123456',
       },
       // 表单验证
       loginFormRules: {
@@ -66,10 +66,11 @@ export default {
     }
   },
   methods: {
+    // 登录方法
     login() {
       clearTimeout(time)
       time = setTimeout(() => {
-        this.$refs.loginFormRef.validate((valid) => {
+        this.$refs.loginFormRef.validate(async (valid) => {
           if (!valid) {
             return this.$message({
               showClose: true,
@@ -77,16 +78,29 @@ export default {
               type: 'error',
             })
           } else {
-            this.$router.push('/home') // 页面跳转
-            return this.$message({
-              message: '登录成功',
-              type: 'success',
-              showClose: true,
-            })
+            let { data: res } = await this.$http.post('login', this.loginForm)
+            console.log(res)
+            if (res.flag == 'ok') {
+              window.sessionStorage.setItem('user', res.data) //存储user信息
+              this.$router.replace('/home') // 页面跳转
+              return this.$message({
+                message: '登录成功',
+                type: 'success',
+                showClose: true,
+              })
+            } else {
+              return this.$message({
+                showClose: true,
+                message: '登录失败，请检查您输入的账号或密码是否正确',
+                type: 'error',
+              })
+            }
           }
         })
       }, 500)
     },
+
+    // 重置
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields()
     },
@@ -104,16 +118,17 @@ export default {
   background-color: #2d3a4b;
 
   .box-card {
-    width: 420px;
-    border-radius: 10px;
+    width: 6.625rem;
+    // height: 5rem;
+    border-radius: 0.125rem;
     background-color: rgb(255, 255, 255);
     border: none;
     h1 {
       text-align: center;
-      margin: 20px;
+      margin: 0.25rem;
     }
     .login_form {
-      padding: 0px 40px;
+      padding: 0px 0.5rem;
     }
   }
   .btns {
