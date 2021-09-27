@@ -79,9 +79,8 @@ export default {
             })
           } else {
             let { data: res } = await this.$http.post('login', this.loginForm)
-            console.log(res)
             if (res.flag == 'ok') {
-              window.sessionStorage.setItem('user', res.data) //存储user信息
+              window.sessionStorage.setItem('user', res.data.username) //存储user信息
               this.$router.replace('/home') // 页面跳转
               return this.$message({
                 message: '登录成功',
@@ -122,7 +121,7 @@ export default {
     // height: 5rem;
     border-radius: 0.125rem;
     background-color: rgb(255, 255, 255);
-    border: none;
+    // border: none;
     h1 {
       text-align: center;
       margin: 0.25rem;
